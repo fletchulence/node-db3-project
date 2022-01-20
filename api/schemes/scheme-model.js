@@ -35,7 +35,6 @@ async function findById(scheme_id) { // EXERCISE B
     .where('sc.scheme_id', scheme_id )
     .orderBy('st.step_number', 'asc')
 
-    // if()
     const result = {
       scheme_id: rows[0].scheme_id,
       scheme_name: rows[0].scheme_name,
@@ -49,7 +48,6 @@ async function findById(scheme_id) { // EXERCISE B
         } else{
           return e.steps;
         }
-
       })
 
   return result
@@ -121,7 +119,14 @@ async function findById(scheme_id) { // EXERCISE B
   */
 }
 
-function findSteps(scheme_id) { // EXERCISE C
+async function findSteps(scheme_id) { // EXERCISE C
+  // const rows = await findById(scheme_id)
+  const rows = await db('steps as st')
+    .leftJoin('schemes as sc', 'sc.scheme_id', '=', 'st.scheme_id')
+    .where('st.scheme_id', scheme_id)
+    .orderBy("st.step_number")
+    .select('st.instructions', 'st.step_number', 'sc.scheme_name', 'st.step_id')
+  return rows
   /*
     1C- Build a query in Knex that returns the following data.
     The steps should be sorted by step_number, and the array
@@ -145,12 +150,14 @@ function findSteps(scheme_id) { // EXERCISE C
 }
 
 function add(scheme) { // EXERCISE D
+  
   /*
     1D- This function creates a new scheme and resolves to _the newly created scheme_.
   */
 }
 
-function addStep(scheme_id, step) { // EXERCISE E
+async function addStep(scheme_id, step) { // EXERCISE E
+  
   /*
     1E- This function adds a step to the scheme with the given `scheme_id`
     and resolves to _all the steps_ belonging to the given `scheme_id`,
