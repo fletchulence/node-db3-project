@@ -171,7 +171,9 @@ async function add(scheme) { // EXERCISE D
     .insert({ ...step, scheme_id })
     .then(()=>{
       return db('steps as st')
-      .where({ scheme_id })
+      .where('sc.scheme_id', scheme_id )
+      .join('schemes as sc', 'sc.scheme_id', 'st.scheme_id')
+      .select('step_id', 'step_number', 'instructions', 'scheme_name')
       .orderBy("st.step_number")
     })
     
